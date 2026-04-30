@@ -2,193 +2,199 @@ import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CartContext } from '../contexts/CartContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BotaoAnimado } from '../components/BotaoAnimado';
 import { SuccessModal } from '../components/SuccessModal';
+import { Trash2, Minus, Plus, ShoppingBag } from 'lucide-react';
 
 export default function Cart() {
     const { cart, removeFromCart, addToCart, decreaseQuantity, clearCart, cartTotal } = useContext(CartContext);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const handleCheckout = () => {
-        setIsModalOpen(true);
-    };
-
+    const handleCheckout = () => setIsModalOpen(true);
     const handleCloseModal = () => {
         setIsModalOpen(false);
         clearCart();
     };
 
-    // Variáveis de animação para a lista e itens
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: { staggerChildren: 0.1 }
-        }
-    };
-
-    const itemVariants = {
-        hidden: { opacity: 0, x: -20 },
-        visible: { opacity: 1, x: 0, transition: { duration: 0.4 } },
-        exit: { opacity: 0, scale: 0.9, x: -50, transition: { duration: 0.3 } }
-    };
-
     if (cart.length === 0) {
         return (
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="flex flex-col items-center justify-center min-h-[70vh] px-4"
-            >
-                <motion.div
-                    animate={{ y: [-10, 10, -10] }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                    className="text-zinc-800 mb-8"
-                >
-                    <svg width="100" height="100" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24">
-                        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
-                        <path d="M3 6h18" />
-                        <path d="M16 10a4 4 0 0 1-8 0" />
-                    </svg>
-                </motion.div>
-                <h2 className="text-3xl font-light text-zinc-300 mb-6 tracking-tight">Seu carrinho está vazio.</h2>
+            <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white px-4">
+                <ShoppingBag size={64} className="mb-6 text-zinc-800" strokeWidth={1} />
+                <h2 className="text-5xl font-black tracking-tight uppercase italic font-anton mb-4 leading-tight">
+                    Carrinho vazio<span className="text-red-600">.</span>
+                </h2>
+                <p className="text-zinc-500 text-sm font-inter mb-10 leading-relaxed">
+                    Nenhum item adicionado ainda
+                </p>
                 <Link to="/">
-                    <BotaoAnimado variant="primary">
-                        Explorar Catálogo
-                    </BotaoAnimado>
+                    <button className="px-10 py-4 bg-red-600 text-white font-black uppercase tracking-wide text-base hover:bg-white hover:text-black transition-colors border-2 border-red-600">
+                        Voltar para a Loja
+                    </button>
                 </Link>
-            </motion.div>
+            </div>
         );
     }
 
     return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="max-w-6xl mx-auto pt-24 pb-16 px-4 sm:px-6 lg:px-8"
-        >
+        <div className="min-h-screen bg-black text-white pt-28 pb-20 px-4 sm:px-6">
             <AnimatePresence>
-                {isModalOpen && (
-                    <SuccessModal isOpen={isModalOpen} onClose={handleCloseModal} />
-                )}
+                {isModalOpen && <SuccessModal isOpen={isModalOpen} onClose={handleCloseModal} />}
             </AnimatePresence>
 
-            <div className="mb-12">
-                <h1 className="text-4xl font-bold text-white tracking-tight mb-2">Carrinho</h1>
-                <p className="text-zinc-500 font-light">Revise seus equipamentos antes de finalizar.</p>
-            </div>
+            <div className="max-w-6xl mx-auto">
 
-            <div className="flex flex-col lg:flex-row gap-10">
-                {/* Lista de Itens */}
-                <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate="visible"
-                    className="flex-1 space-y-4"
-                >
-                    <AnimatePresence mode="popLayout">
-                        {cart.map((item) => (
-                            <motion.div
-                                layout
-                                variants={itemVariants}
-                                initial="hidden"
-                                animate="visible"
-                                exit="exit"
-                                key={item.id}
-                                className="bg-white/[0.02] backdrop-blur-md rounded-2xl border border-white/5 p-4 sm:p-6 flex flex-col sm:flex-row items-center gap-4 group hover:border-white/10 transition-colors"
-                            >
-                                <div className="w-20 h-20 sm:w-24 sm:h-24 p-2 rounded-xl bg-zinc-900/50 border border-white/5 flex items-center justify-center shrink-0">
-                                    <img
-                                        src={item.imagem}
-                                        alt={item.nome}
-                                        className="w-full h-full object-cover rounded-lg"
-                                    />
-                                </div>
+                {/* Header */}
+                <header className="mb-12 pb-5 border-b-4 border-red-600 flex items-end justify-between">
+                    <h1 className="text-6xl sm:text-7xl font-black tracking-tight uppercase italic font-anton leading-[0.95]">
+                        Carrinho<span className="text-red-600">.</span>
+                    </h1>
+                    <span className="text-zinc-500 text-sm font-inter mb-1 tracking-wide">
+                        {cart.reduce((acc, i) => acc + i.quantity, 0)} {cart.reduce((acc, i) => acc + i.quantity, 0) === 1 ? 'item' : 'itens'}
+                    </span>
+                </header>
 
-                                <div className="flex-1 text-center sm:text-left">
-                                    <h3 className="text-lg font-bold text-zinc-100 mb-1 line-clamp-1">{item.nome}</h3>
-                                    <p className="text-amber-500 font-semibold tracking-tight">
-                                        {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.preco)}
-                                    </p>
-                                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
 
-                                {/* Controles de Quantidade */}
-                                <div className="flex items-center gap-3 bg-zinc-900/50 rounded-xl p-1.5 border border-white/5">
-                                    <motion.button
-                                        whileTap={{ scale: 0.8 }}
-                                        onClick={() => decreaseQuantity(item.id)}
-                                        className="w-8 h-8 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-                                    >
-                                        <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" viewBox="0 0 24 24"><path d="M5 12h14" /></svg>
-                                    </motion.button>
+                    {/* Lista de produtos */}
+                    <div className="lg:col-span-8 space-y-3">
 
-                                    <span className="text-white font-bold min-w-[24px] text-center text-sm">{item.quantity}</span>
-
-                                    <motion.button
-                                        whileTap={{ scale: 0.8 }}
-                                        onClick={() => addToCart(item)}
-                                        className="w-8 h-8 flex items-center justify-center text-amber-500 hover:bg-white/10 rounded-lg transition-colors"
-                                    >
-                                        <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></svg>
-                                    </motion.button>
-                                </div>
-
-                                <div className="hidden sm:block text-right min-w-[100px] ml-2">
-                                    <p className="text-zinc-600 text-[10px] uppercase tracking-widest font-bold mb-1">Subtotal</p>
-                                    <p className="text-white font-bold tracking-tight">
-                                        {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.preco * item.quantity)}
-                                    </p>
-                                </div>
-
-                                <motion.button
-                                    whileTap={{ scale: 0.8 }}
-                                    onClick={() => removeFromCart(item.id)}
-                                    className="p-3 text-zinc-600 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-colors ml-2"
-                                >
-                                    <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
-                                        <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6" />
-                                    </svg>
-                                </motion.button>
-                            </motion.div>
-                        ))}
-                    </AnimatePresence>
-                </motion.div>
-
-                {/* Resumo */}
-                <div className="lg:w-[400px]">
-                    <div className="bg-white/[0.02] backdrop-blur-2xl rounded-[2rem] border border-white/5 p-8 sticky top-24 shadow-2xl relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
-
-                        <h3 className="text-xl font-bold text-white mb-6 border-b border-white/5 pb-6 relative z-10">Resumo do Pedido</h3>
-
-                        <div className="space-y-4 mb-8 relative z-10">
-                            <div className="flex justify-between text-zinc-400 text-sm">
-                                <span>Itens no carrinho:</span>
-                                <span className="font-medium text-white">{cart.reduce((acc, item) => acc + item.quantity, 0)}</span>
-                            </div>
-                            <div className="flex justify-between items-end pt-6 border-t border-white/5">
-                                <span className="text-zinc-300 font-medium">Total</span>
-                                <span className="text-4xl font-light text-amber-500 tracking-tighter">
-                                    {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(cartTotal)}
-                                </span>
-                            </div>
+                        {/* Cabeçalho da tabela */}
+                        <div className="hidden sm:grid grid-cols-12 text-xs font-bold text-zinc-500 font-inter pb-3 border-b border-zinc-800 px-4 tracking-wide">
+                            <span className="col-span-5">Produto</span>
+                            <span className="col-span-3 text-center">Quantidade</span>
+                            <span className="col-span-3 text-right">Subtotal</span>
+                            <span className="col-span-1"></span>
                         </div>
 
-                        <div className="relative z-10 flex flex-col gap-4">
-                            <BotaoAnimado onClick={handleCheckout} variant="primary" className="w-full py-4 text-base">
-                                Finalizar Pedido
-                            </BotaoAnimado>
+                        <AnimatePresence mode="popLayout">
+                            {cart.map((item) => (
+                                <motion.div
+                                    layout
+                                    initial={{ opacity: 0, y: 8 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, x: -20 }}
+                                    key={item.id}
+                                    className="grid grid-cols-1 sm:grid-cols-12 items-center gap-4 bg-zinc-900 border border-zinc-800 p-5 hover:border-zinc-600 transition-colors"
+                                >
+                                    {/* Imagem + info */}
+                                    <div className="sm:col-span-5 flex items-center gap-4">
+                                        <div className="w-16 h-16 bg-black border border-zinc-700 overflow-hidden flex-shrink-0">
+                                            <img src={item.imagem} alt={item.nome} className="w-full h-full object-cover" />
+                                        </div>
+                                        <div className="min-w-0 space-y-1">
+                                            <h3 className="text-base font-bold uppercase leading-snug tracking-tight font-inter truncate">
+                                                {item.nome}
+                                            </h3>
+                                            <p className="text-red-500 font-semibold text-sm mt-1 font-inter leading-relaxed">
+                                                {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.preco)}
+                                            </p>
+                                        </div>
+                                    </div>
 
+                                    {/* Quantidade */}
+                                    <div className="sm:col-span-3 flex justify-start sm:justify-center">
+                                        <div className="flex items-center border border-zinc-700 bg-black">
+                                            <button
+                                                onClick={() => decreaseQuantity(item.id)}
+                                                className="w-9 h-9 flex items-center justify-center hover:bg-zinc-800 transition-colors border-r border-zinc-700"
+                                            >
+                                                <Minus size={12} />
+                                            </button>
+                                            <span className="w-9 text-center font-bold text-sm font-inter tracking-wide">
+                                                {item.quantity}
+                                            </span>
+                                            <button
+                                                onClick={() => addToCart(item)}
+                                                className="w-9 h-9 flex items-center justify-center hover:bg-zinc-800 transition-colors border-l border-zinc-700"
+                                            >
+                                                <Plus size={12} />
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {/* Subtotal desktop */}
+                                    <div className="hidden sm:flex sm:col-span-3 justify-end">
+                                        <p className="text-white font-bold text-base font-inter tracking-tight leading-snug">
+                                            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.preco * item.quantity)}
+                                        </p>
+                                    </div>
+
+                                    {/* Remover desktop */}
+                                    <div className="hidden sm:flex sm:col-span-1 justify-end">
+                                        <button
+                                            onClick={() => removeFromCart(item.id)}
+                                            className="text-zinc-600 hover:text-red-600 transition-colors p-1"
+                                        >
+                                            <Trash2 size={16} />
+                                        </button>
+                                    </div>
+
+                                    {/* Mobile */}
+                                    <div className="sm:hidden flex justify-between items-center border-t border-zinc-800 pt-4 mt-2">
+                                        <p className="text-white font-bold text-base font-inter leading-snug">
+                                            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.preco * item.quantity)}
+                                        </p>
+                                        <button
+                                            onClick={() => removeFromCart(item.id)}
+                                            className="text-zinc-600 hover:text-red-600 transition-colors"
+                                        >
+                                            <Trash2 size={16} />
+                                        </button>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </AnimatePresence>
+
+                        <div className="pt-4">
                             <button
                                 onClick={clearCart}
-                                className="w-full bg-transparent text-zinc-500 py-3 rounded-full font-bold text-xs uppercase tracking-widest hover:text-white transition-colors"
+                                className="text-zinc-600 hover:text-white text-xs font-inter transition-colors tracking-wide"
                             >
-                                Esvaziar Carrinho
+                                Limpar carrinho
                             </button>
                         </div>
                     </div>
+
+                    {/* Resumo */}
+                    <aside className="lg:col-span-4">
+                        <div className="bg-zinc-900 border-2 border-white p-8 sticky top-28">
+                            <h3 className="text-2xl font-black uppercase italic tracking-tight leading-tight mb-6 pb-4 border-b-2 border-red-600 font-anton">
+                                Resumo
+                            </h3>
+
+                            <div className="space-y-5 mb-8">
+                                <div className="flex justify-between font-inter text-sm">
+                                    <span className="text-zinc-400">Subtotal</span>
+                                    <span className="text-white font-semibold">
+                                        {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(cartTotal)}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between font-inter text-sm">
+                                    <span className="text-zinc-400">Frete</span>
+                                    <span className="text-green-400 font-semibold">Grátis</span>
+                                </div>
+                                <div className="flex justify-between items-center pt-6 border-t border-zinc-800">
+                                    <span className="font-black uppercase italic font-anton text-base">Total</span>
+                                    <span className="text-3xl font-black tracking-tight text-white font-anton">
+                                        {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(cartTotal)}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <motion.button
+                                whileTap={{ scale: 0.97 }}
+                                onClick={handleCheckout}
+                                className="w-full bg-red-600 hover:bg-white hover:text-black text-white py-5 font-black uppercase tracking-wide text-lg transition-all border-2 border-red-600 font-anton"
+                            >
+                                Finalizar Compra
+                            </motion.button>
+
+                            <Link to="/" className="block mt-5 text-center text-zinc-500 hover:text-white text-xs font-inter transition-colors tracking-wide">
+                                Continuar comprando
+                            </Link>
+                        </div>
+                    </aside>
                 </div>
             </div>
-        </motion.div>
+        </div>
     );
 }

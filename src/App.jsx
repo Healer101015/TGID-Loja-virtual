@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { CartProvider } from './contexts/CartContext';
-import { Header } from './components/Header';
+import Header from './components/Header';
 import { Footer } from './components/Footer';
 import Home from './pages/Home';
 import ProductDetails from './pages/ProductDetails';
@@ -14,7 +14,7 @@ export default function App() {
           <Header />
 
           {/* O main com flex-1 garante que o Footer seja empurrado para o fim da tela */}
-          <main className="flex-1 w-full max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+          <main className="flex-1 w-full">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/produto/:id" element={<ProductDetails />} />

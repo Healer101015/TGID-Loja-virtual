@@ -1,168 +1,166 @@
-import { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
+import HeroSection from '../components/HeroSection';
+import CarouselBanner from '../components/CarouselBanner';
 import { ProductCard } from '../components/ProductCard';
-import { motion, AnimatePresence } from 'framer-motion';
 
-const SkeletonCard = () => (
-    <div className="flex flex-col h-full animate-pulse">
-        <div className="aspect-square bg-zinc-900/50 rounded-2xl mb-6 border border-white/5"></div>
-        <div className="px-1 space-y-3">
-            <div className="h-5 bg-zinc-900 rounded-md w-3/4"></div>
-            <div className="h-4 bg-zinc-900/50 rounded-md w-full"></div>
-        </div>
-    </div>
-);
+const ITEMS_PER_PAGE = 8;
 
 export default function Home() {
     const [products, setProducts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState('Todos');
     const [currentPage, setCurrentPage] = useState(1);
-    const productsPerPage = 8;
+
+    // 🔥 novos estados
+    const [search, setSearch] = useState('');
+    const [category, setCategory] = useState('all');
 
     useEffect(() => {
-        async function loadProducts() {
+        const fetchProducts = async () => {
             try {
                 const response = await api.get('/produtos');
-                setTimeout(() => {
-                    setProducts(response.data);
-                    setLoading(false);
-                }, 600);
-            } catch (error) {
-                console.error('Erro na API:', error);
-                setLoading(false);
-            }
-        }
-        loadProducts();
+                setProducts(response.data);
+            } catch (error) { console.error(error); }
+        };
+        fetchProducts();
     }, []);
 
-    const filteredProducts = products.filter((product) => {
-        const matchesSearch = product.nome.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = selectedCategory === 'Todos' ? true : product.categoria === selectedCategory;
-        return matchesSearch && matchesCategory;
+    // 🔥 pega categorias únicas
+    const categories = ['all', ...new Set(products.map(p => p.categoria))];
+
+    // 🔥 filtro
+    const filteredProducts = products.filter(p => {
+        const name = (p.nome || '').toLowerCase();
+        const matchSearch = name.includes(search.toLowerCase());
+        const matchCategory = category === 'all' || p.categoria === category;
+        return matchSearch && matchCategory;
     });
 
-    const indexOfLastProduct = currentPage * productsPerPage;
-    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-    const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
-    const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
-    const categories = ['Todos', ...new Set(products.map(item => item.categoria))];
+    const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
 
-    useEffect(() => setCurrentPage(1), [searchTerm, selectedCategory]);
+    const paginatedProducts = filteredProducts.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+    );
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+        document.getElementById('mais-vendidos').scrollIntoView({ behavior: 'smooth' });
+    };
 
     return (
-        <div className="w-full pt-24 pb-20">
-            <div className="mb-10">
-                <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-3">Catálogo.</h1>
-                <p className="text-zinc-500 font-light text-lg">Hardware de elite para setups de alto nível.</p>
-            </div>
+        <div className="bg-black min-h-screen text-white w-full overflow-x-hidden">
+            <HeroSection />
 
-            {/* Barra de Filtros */}
-            <div className="sticky top-20 z-40 bg-[#050505]/80 backdrop-blur-xl border-b border-white/5 pb-4 pt-2 mb-12 flex flex-col md:flex-row items-center justify-between gap-6">
-                <div className="flex flex-wrap gap-1 bg-zinc-900/30 p-1 rounded-full border border-white/5">
-                    {categories.map(cat => (
-                        <button
-                            key={cat}
-                            onClick={() => setSelectedCategory(cat)}
-                            className="relative px-6 py-2 rounded-full text-[10px] uppercase tracking-[0.15em] font-bold focus:outline-none"
-                        >
-                            {selectedCategory === cat && (
-                                <motion.div
-                                    layoutId="activeTab"
-                                    className="absolute inset-0 bg-white rounded-full shadow-lg"
-                                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                                />
-                            )}
-                            <span className={`relative z-10 transition-colors duration-300 ${selectedCategory === cat ? 'text-black' : 'text-zinc-500 hover:text-zinc-300'}`}>
-                                {cat}
-                            </span>
-                        </button>
-                    ))}
+            {/* NOVO DROP */}
+            <section className="w-full py-24 px-6 md:px-12 flex flex-col items-center space-y-12">
+                <h2 className="text-4xl md:text-5xl font-bold uppercase tracking-tight leading-tight font-anton text-center">
+                    <span className="text-red-600">NOVO</span> DROP
+                </h2>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-6xl">
+                    {products.slice(0, 4).map(p => <ProductCard key={p.id} product={p} />)}
                 </div>
+            </section>
 
-                <div className="relative w-full md:w-80">
+            <CarouselBanner />
+
+            {/* MAIS VENDIDOS */}
+            <section id="mais-vendidos" className="w-full py-24 px-6 md:px-12 flex flex-col items-center space-y-10">
+
+                <h2 className="text-4xl md:text-6xl uppercase font-bold font-anton tracking-tight text-center leading-[1.05] max-w-3xl">
+                    MAIS VENDIDOS <span className="text-red-600">PRA VOCÊ AMAR</span>
+                </h2>
+
+                {/* 🔍 FILTROS */}
+                <div className="w-full max-w-6xl flex flex-col md:flex-row gap-4">
+
+                    {/* busca */}
                     <input
                         type="text"
-                        placeholder="Buscar..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-zinc-900/50 border border-zinc-800 text-white rounded-full px-6 py-3 focus:outline-none focus:border-white/20 transition-all placeholder:text-zinc-600 text-sm font-light"
+                        placeholder="Buscar produto..."
+                        value={search}
+                        onChange={(e) => {
+                            setSearch(e.target.value);
+                            setCurrentPage(1);
+                        }}
+                        className="w-full md:flex-1 bg-black border border-zinc-700 px-4 py-3 text-sm font-inter focus:outline-none focus:border-white"
                     />
+
+                    {/* categoria */}
+                    <select
+                        value={category}
+                        onChange={(e) => {
+                            setCategory(e.target.value);
+                            setCurrentPage(1);
+                        }}
+                        className="bg-black border border-zinc-700 px-4 py-3 text-sm font-inter focus:outline-none focus:border-white"
+                    >
+                        {categories.map((cat, i) => (
+                            <option key={i} value={cat}>
+                                {cat === 'all' ? 'Todas categorias' : cat}
+                            </option>
+                        ))}
+                    </select>
                 </div>
-            </div>
 
-            {/* 
-        
-         
-      */}
-            <div className="min-h-[800px]">
-                <AnimatePresence mode="wait">
-                    {loading ? (
-                        <motion.div
-                            key="loading"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-16"
+                {/* produtos */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-14 w-full max-w-6xl">
+                    {paginatedProducts.map(p => <ProductCard key={p.id} product={p} />)}
+                </div>
+
+                {/* Paginação */}
+                {totalPages > 1 && (
+                    <div className="flex items-center gap-3 mt-6">
+                        <button
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            className="w-10 h-10 flex items-center justify-center border border-zinc-700 text-zinc-400 hover:border-white hover:text-white transition-colors disabled:opacity-20"
                         >
-                            {[...Array(8)].map((_, i) => <SkeletonCard key={i} />)}
-                        </motion.div>
-                    ) : (
-                        <motion.div
-                            key={selectedCategory + searchTerm + currentPage}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.3 }}
-                            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-16"
-                        >
-                            {currentProducts.map((product, index) => (
-                                <ProductCard key={product.id} product={product} index={index} />
-                            ))}
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+                            ‹
+                        </button>
 
-                {!loading && filteredProducts.length === 0 && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-40 border border-dashed border-zinc-800 rounded-3xl">
-                        <p className="text-zinc-500 font-light">Nenhum item encontrado.</p>
-                    </motion.div>
-                )}
-            </div>
-
-            {/* 
-         
-      */}
-            {!loading && totalPages > 1 && (
-                <nav className="flex justify-center items-center mt-24 gap-3">
-                    <div className="flex items-center gap-1 bg-zinc-900/30 p-1 rounded-full border border-white/5">
-                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
+                        {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
                             <button
-                                key={pageNumber}
-                                onClick={() => {
-                                    setCurrentPage(pageNumber);
-                                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                                }}
-                                className="relative w-10 h-10 rounded-full text-xs font-bold transition-colors flex items-center justify-center focus:outline-none"
+                                key={page}
+                                onClick={() => handlePageChange(page)}
+                                className={`w-10 h-10 font-black text-sm border-2 ${currentPage === page
+                                        ? 'bg-red-600 border-red-600'
+                                        : 'border-zinc-700 text-zinc-400 hover:border-white hover:text-white'
+                                    }`}
                             >
-                                <AnimatePresence>
-                                    {currentPage === pageNumber && (
-                                        <motion.div
-                                            layoutId="activePageIndicator"
-                                            className="absolute inset-0 bg-white rounded-full shadow-xl"
-                                            transition={{ type: "spring", bounce: 0.3, duration: 0.6 }}
-                                        />
-                                    )}
-                                </AnimatePresence>
-                                <span className={`relative z-10 ${currentPage === pageNumber ? 'text-black' : 'text-zinc-500 hover:text-white'}`}>
-                                    {pageNumber}
-                                </span>
+                                {page}
                             </button>
                         ))}
+
+                        <button
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                            className="w-10 h-10 flex items-center justify-center border border-zinc-700 text-zinc-400 hover:border-white hover:text-white transition-colors disabled:opacity-20"
+                        >
+                            ›
+                        </button>
                     </div>
-                </nav>
-            )}
+                )}
+            </section>
+
+            {/* FEEDBACKS */}
+            <section className="w-full bg-[#cb5c4b] py-24 px-4">
+                <div className="max-w-5xl mx-auto text-center space-y-12">
+                    <h2 className="text-4xl md:text-5xl uppercase font-bold text-white tracking-tight font-anton">
+                        FEEDBACKS
+                    </h2>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        {[1, 2, 3, 4].map(i => (
+                            <div key={i} className="border border-white/40 rounded-lg p-6 text-left flex items-center min-h-[160px]">
+                                <p className="italic text-base md:text-lg leading-relaxed font-inter">
+                                    "Produto chegou rápido, bem embalado e com ótimo desempenho. Superou minhas expectativas."
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
         </div>
     );
 }
