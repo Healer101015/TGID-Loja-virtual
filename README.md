@@ -2,7 +2,7 @@
 
 ---
 
-Uma aplicação de e-commerce de hardware, com foco em uma experiência de usuário cinematográfica, minimalista e fluida. Este projeto foi desenvolvido no contexto de um teste técnico, utilizando React, Tailwind CSS e Framer Motion.
+Uma aplicação de e-commerce de hardware, com foco em uma experiência minimalista e fluida. Este projeto foi desenvolvido no contexto de um teste técnico, utilizando React, Tailwind CSS e Framer Motion.
 
 ---
 
