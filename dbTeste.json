@@ -1,0 +1,156 @@
+{
+    "produtos": [
+        {
+            "id": 1,
+            "nome": "Headset Gamer Pro",
+            "preco": 399.90,
+            "descricao": "Áudio imersivo de alta qualidade com cancelamento de ruído.",
+            "imagem": "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&w=800&q=80",
+            "categoria": "Periféricos"
+        },
+        {
+            "id": 2,
+            "nome": "Teclado Mecânico RGB",
+            "preco": 259.50,
+            "descricao": "Switches azuis para resposta tátil e rápida.",
+            "imagem": "https://images.unsplash.com/photo-1595225476474-87563907a212?auto=format&fit=crop&w=800&q=80",
+            "categoria": "Periféricos"
+        },
+        {
+            "id": 3,
+            "nome": "Monitor UltraWide 29\"",
+            "preco": 1299.00,
+            "descricao": "Mais espaço de tela para produtividade.",
+            "imagem": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=800&q=80",
+            "categoria": "Monitores"
+        },
+        {
+            "id": 5,
+            "nome": "Cadeira Ergonômica Pro",
+            "preco": 850.00,
+            "descricao": "Ajuste de altura e lombar para longas jornadas.",
+            "imagem": "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?auto=format&fit=crop&w=800&q=80",
+            "categoria": "Mobiliário"
+        },
+        {
+            "id": 7,
+            "nome": "Microfone Condensador USB",
+            "preco": 320.00,
+            "descricao": "Captação de áudio cristalina para podcasts.",
+            "imagem": "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=800&q=80",
+            "categoria": "Periféricos"
+        },
+        {
+            "id": 9,
+            "nome": "Placa de Vídeo RTX 4070",
+            "preco": 4200.00,
+            "descricao": "Desempenho extremo com Ray Tracing de última geração.",
+            "imagem": "https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&w=800&q=80",
+            "categoria": "Hardware"
+        },
+        {
+            "id": 10,
+            "nome": "Placa de Vídeo RTX 4090",
+            "preco": 3850.00,
+            "descricao": "O ápice do processamento para tarefas pesadas.",
+            "imagem": "https://images.unsplash.com/photo-1591405351990-4726e331f141?auto=format&fit=crop&w=800&q=80",
+            "categoria": "Hardware"
+        },
+        {
+            "id": 11,
+            "nome": "Memória RAM 32GB DDR5",
+            "preco": 980.00,
+            "descricao": "Velocidade e estabilidade para multitarefas intensas.",
+            "imagem": "https://images.unsplash.com/photo-1562976540-1502c2145186?auto=format&fit=crop&w=800&q=80",
+            "categoria": "Hardware"
+        },
+        {
+            "id": 12,
+            "nome": "SSD NVMe 2TB Gen4",
+            "preco": 850.00,
+            "descricao": "Leitura de 7000MB/s para carregamento instantâneo.",
+            "imagem": "https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&w=800&q=80",
+            "categoria": "Hardware"
+        },
+        {
+            "id": 14,
+            "nome": "Suporte Monitor Articulado",
+            "preco": 280.00,
+            "descricao": "Organize seu setup com ergonomia total.",
+            "imagem": "https://images.unsplash.com/photo-1547082299-de196ea013d6?auto=format&fit=crop&w=800&q=80",
+            "categoria": "Mobiliário"
+        },
+        {
+            "id": 15,
+            "nome": "Mousepad Extra Large",
+            "preco": 89.90,
+            "descricao": "Superfície speed de 90cm para liberdade total.",
+            "imagem": "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=800&q=80",
+            "categoria": "Acessórios"
+        },
+        {
+            "id": 16,
+            "nome": "telefone com fio inteligente",
+            "preco": 199.00,
+            "descricao": "Integração total com Alexa e Google Home.",
+            "imagem": "https://images.unsplash.com/photo-1534073828943-f801091bb18c?auto=format&fit=crop&w=800&q=80",
+            "categoria": "Acessórios"
+        },
+        {
+            "id": 17,
+            "nome": "Placa de Vídeo RTX 4070",
+            "preco": 245.00,
+            "descricao": "Jogue todos os jogos com gráficos incríveis e desempenho fluido.",
+            "imagem": "https://images.unsplash.com/photo-1591405351990-4726e331f141?auto=format&fit=crop&w=800&q=80",
+            "categoria": "Periféricos"
+        },
+        {
+            "id": 18,
+            "nome": "Caixa de Som Bookshelf",
+            "preco": 750.00,
+            "descricao": "Fidelidade sonora de estúdio no seu setup.",
+            "imagem": "https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=800&q=80",
+            "categoria": "Periféricos"
+        },
+        {
+            "id": 21,
+            "nome": "5090",
+            "preco": 195.00,
+            "descricao": "Fluxo de ar otimizado.",
+            "imagem": "https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&w=800&q=80",
+            "categoria": "Hardware"
+        },
+        {
+            "id": 22,
+            "nome": "Headphone Stand RGB",
+            "preco": 120.00,
+            "descricao": "Mantenha seu fone seguro e seu setup iluminado.",
+            "imagem": "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&w=800&q=80",
+            "categoria": "Acessórios"
+        },
+        {
+            "id": 24,
+            "nome": "Placa-Mãe Z790 Elite",
+            "preco": 2100.00,
+            "descricao": "Suporte total para overclocking e DDR5.",
+            "imagem": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80",
+            "categoria": "Hardware"
+        },
+        {
+            "id": 26,
+            "nome": "Mini pc Gamer Compacto",
+            "preco": 95.00,
+            "descricao": "Iluminação ambiente customizável via Wi-Fi.",
+            "imagem": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80",
+            "categoria": "Acessórios"
+        },
+        {
+            "id": 27,
+            "nome": "Teclado Numérico Wireless",
+            "preco": 145.00,
+            "descricao": "Complemento ideal para teclados TKL.",
+            "imagem": "https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?auto=format&fit=crop&w=800&q=80",
+            "categoria": "Periféricos"
+        }
+    ]
+}
