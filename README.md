@@ -43,7 +43,7 @@ Uma aplicação de e-commerce de hardware, com foco em uma experiência minimali
 ### 1. Clonar o Repositório
 ```bash
 git clone https://github.com/Healer101015/TGID-Loja-virtual
-cd loja-virtual
+cd TGID-Loja-virtual
 ```
 
 ### 2. Instalar Dependências
